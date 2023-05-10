@@ -1,0 +1,15 @@
+.button {
+    font            : inherit;
+    cursor          : pointer;
+    padding         : .4rem 1rem;
+    border          : 1px solid aliceblue;
+    background-color: aliceblue;
+    color           : rgb(31, 31, 31);
+    border-radius   : 12px;
+}
+
+.button:hover,
+.button:active {
+    background-color: blueviolet;
+    border-color    : blueviolet;
+}

@@ -1,0 +1,11 @@
+.user {
+    border-style: solid;
+    border-color: aliceblue;
+    text-align  : left;
+    margin      : 1rem auto;
+}
+
+.user p {
+    color       : aliceblue;
+    padding-left: 1rem;
+}

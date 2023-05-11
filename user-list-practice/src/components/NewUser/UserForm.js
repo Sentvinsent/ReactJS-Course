@@ -1,21 +1,16 @@
 import styles from "./UserForm.module.css";
 import { v4 as uuidv4 } from 'uuid';
-import { useState } from "react";
+import { useState, useRef } from "react";
 import ErrorModal from "./ErrorModal";
 import Button from "../UI/Button";
+import Wrapper from "../Helpers/Wrapper";
 
 const UserForm = (props) => {
-    const [enteredName, setName] = useState('');
-    const [enteredAge, setAge] = useState("");
+    const nameInpRef = useRef();
+    const ageInpRef = useRef();
     const [openModal, setOpenModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const nameChangeHandler = (event) => {
-        setName(event.target.value);
-    }
-    const ageChangeHandler = (event) => {
-        setAge(event.target.value);
-    }
     const openModalHandler = () => {
         setOpenModal(true)
     }
@@ -26,6 +21,9 @@ const UserForm = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
 
+        const enteredName = nameInpRef.current.value;
+        const enteredAge = ageInpRef.current.value;
+
         if (enteredName.trim().length > 0 && Number(enteredAge) > 0) {
             const userData = {
                 id: uuidv4(),
@@ -34,9 +32,9 @@ const UserForm = (props) => {
             }
 
             props.onAddUser(userData);
+            nameInpRef.current.value = '';
+            ageInpRef.current.value = '';
 
-            setName("");
-            setAge("");
         } else {
             if (enteredName.trim().length < 1 && Number(enteredAge) < 1) {
                 setErrorMessage("Please enter a valid name and age (non-empty values).")
@@ -53,24 +51,24 @@ const UserForm = (props) => {
 
     }
     return (
-        <div>
+        <Wrapper>
             <form onSubmit={submitHandler}>
                 <div className={styles["new-users__controls"]}>
                     <div className={styles["new-user__control"]}>
-                        <label>Name</label>
+                        <label htmlFor="name-inp">Name</label>
                         <input
+                            id="name-inp"
                             type="text"
-                            value={enteredName}
-                            onChange={nameChangeHandler}
+                            ref={nameInpRef}
                         />
                     </div>
                     <div className={styles['new-user__control']}>
-                        <label>Age</label>
+                        <label htmlFor="num-inp">Age</label>
                         <input
+                            id="num-inp"
                             type="number"
                             step="1"
-                            value={enteredAge}
-                            onChange={ageChangeHandler}
+                            ref={ageInpRef}
                         />
                     </div>
                 </div>
@@ -79,7 +77,7 @@ const UserForm = (props) => {
                 </div>
             </form>
             <ErrorModal openModal={openModal} onModalClose={closeModalHandler} errorMessage={errorMessage} />
-        </div>
+        </Wrapper>
     )
 }
 

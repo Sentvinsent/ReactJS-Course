@@ -1,36 +1,19 @@
 import classes from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
 import Card from "../UI/Card";
-
-const DUMMY_MEALS = [
-    {
-        id: 'm1',
-        name: 'Sushi',
-        description: 'Finest fish and veggies',
-        price: 22.99,
-    },
-    {
-        id: 'm2',
-        name: 'Schnitzel',
-        description: 'A german specialty!',
-        price: 16.5,
-    },
-    {
-        id: 'm3',
-        name: 'Barbecue Burger',
-        description: 'American, raw, meaty',
-        price: 12.99,
-    },
-    {
-        id: 'm4',
-        name: 'Green Bowl',
-        description: 'Healthy...and green...',
-        price: 18.99,
-    },
-];
+import useRequest from "../../hooks/use-request";
+import { useEffect, useState } from "react";
 
 const AvailableMeals = () => {
-    const mealsList = DUMMY_MEALS.map((meal) => {
+
+    const [meals, setMeals] = useState([]);
+    const { isLoading, error, sendRequest } = useRequest();
+
+    useEffect(() => {
+        sendRequest({ "url": "https://react-course-proj-e9722-default-rtdb.firebaseio.com/Meals.json" }, setMeals)
+    }, [sendRequest])
+
+    const mealsList = meals.map((meal) => {
         return <MealItem
             id={meal.id}
             key={meal.id}
@@ -40,12 +23,27 @@ const AvailableMeals = () => {
         />
     })
 
+    let content =
+        <ul>
+            {mealsList}
+        </ul>;
+
+    if (error) {
+        content =
+            <div className={classes.fetchErrorContainer}>
+                <p>Failed to get the meals list</p>
+                <button onClick={sendRequest} className={classes.fetchButton}>Try again</button>
+            </div>
+    }
+
+    if (isLoading) {
+        content = <p className={classes.mealsLoading}>Loading tasks...</p>
+    }
+
     return (
         <section className={classes.meals}>
             <Card>
-                <ul>
-                    {mealsList}
-                </ul>
+                {content}
             </Card>
         </section>
     )

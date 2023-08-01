@@ -11,6 +11,31 @@
     padding   : 0;
 }
 
+.mealsLoading {
+    text-align: center;
+}
+
+.fetchErrorContainer {
+    text-align: center;
+}
+
+.fetchButton {
+    font            : inherit;
+    cursor          : pointer;
+    background-color: #8a2b06;
+    border          : 1px solid #8a2b06;
+    color           : white;
+    padding         : 0.25rem 2rem;
+    border-radius   : 20px;
+    font-weight     : bold;
+}
+
+.fetchButton:hover,
+.fetchButton:active {
+    background-color: #641e03;
+    border-color    : #641e03;
+}
+
 @keyframes meals-appear {
     from {
         opacity  : 0;

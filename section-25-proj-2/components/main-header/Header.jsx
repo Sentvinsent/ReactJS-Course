@@ -18,9 +18,6 @@ export default function Header() {
         <nav className={styles.nav}>
           <ul>
             <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
               <NavLink href="/meals">Browse meals</NavLink>
             </li>
             <li>

@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useAnimate, stagger } from "framer-motion";
 
 import { ChallengesContext } from "../store/challenges-context.jsx";
 import Modal from "./Modal.jsx";
@@ -12,6 +12,7 @@ export default function NewChallenge({ onDone }) {
 
   const [selectedImage, setSelectedImage] = useState(null);
   const { addChallenge } = useContext(ChallengesContext);
+  const [scope, animate] = useAnimate();
 
   function handleSelectImage(image) {
     setSelectedImage(image);
@@ -32,6 +33,11 @@ export default function NewChallenge({ onDone }) {
       !challenge.deadline.trim() ||
       !challenge.image
     ) {
+      animate(
+        "input, textarea",
+        { x: [-10, 0, 10, 0] },
+        { type: "spring", duration: 0.2, delay: stagger(0.05) }
+      );
       return;
     }
 
@@ -41,7 +47,7 @@ export default function NewChallenge({ onDone }) {
 
   return (
     <Modal title="New Challenge" onClose={onDone}>
-      <form id="new-challenge" onSubmit={handleSubmit}>
+      <form id="new-challenge" onSubmit={handleSubmit} ref={scope}>
         <p>
           <label htmlFor="title">Title</label>
           <input ref={title} type="text" name="title" id="title" />
@@ -57,12 +63,17 @@ export default function NewChallenge({ onDone }) {
           <input ref={deadline} type="date" name="deadline" id="deadline" />
         </p>
 
-        <ul id="new-challenge-images">
+        <motion.ul
+          id="new-challenge-images"
+          variants={{
+            visible: { transition: { staggerChildren: 0.05 } },
+          }}
+        >
           {images.map((image) => (
             <motion.li
               variants={{
                 hidden: { opacity: 0, scale: 0.5 },
-                visible: { opacity: 1, scale: 1 },
+                visible: { opacity: 1, scale: [0.8, 1.3, 1] },
               }}
               transition={{ type: "spring" }}
               exit={{ opacity: 1, scale: 1 }}
@@ -73,7 +84,7 @@ export default function NewChallenge({ onDone }) {
               <img {...image} />
             </motion.li>
           ))}
-        </ul>
+        </motion.ul>
 
         <p className="new-challenge-actions">
           <button type="button" onClick={onDone}>
